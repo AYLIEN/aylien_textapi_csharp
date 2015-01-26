@@ -26,7 +26,7 @@ namespace Aylien.TextApi
     {
         public Extract(Configuration config) : base(config) { }
 
-        internal Response call(string url, string html, string bestImage)
+        internal Response call(string url, string html, string bestImage, Dictionary<string, string> extraParameters)
         {
             Dictionary<string, string> parameters = new Dictionary<string, string>();
 
@@ -35,9 +35,16 @@ namespace Aylien.TextApi
 
             if (!String.IsNullOrWhiteSpace(html))
                 parameters["html"] = html;
-            
+
             if (!String.IsNullOrWhiteSpace(bestImage))
                 parameters["best_image"] = bestImage;
+
+            if (extraParameters != null && extraParameters.Count > 0)
+                foreach (var keyValue in extraParameters)
+                {
+                    if (!parameters.ContainsKey(keyValue.Key) && !String.IsNullOrWhiteSpace(keyValue.Key))
+                        parameters.Add(keyValue.Key, keyValue.Value);
+                }
 
             Connection connection = new Connection(Configuration.Endpoints["Extract"], parameters, configuration);
             var response = connection.request();
@@ -46,13 +53,13 @@ namespace Aylien.TextApi
             return response;
         }
 
-        public string Title { get; set;}
-        public string Article { get; set;}
-        public string Image { get; set;}
-        public string Author { get; set;}
-        public string[] Videos { get; set;}
-        public string[] Feeds { get; set;}
-        
+        public string Title { get; set; }
+        public string Article { get; set; }
+        public string Image { get; set; }
+        public string Author { get; set; }
+        public string[] Videos { get; set; }
+        public string[] Feeds { get; set; }
+
         private void populateData(string jsonString)
         {
             Extract m = JsonConvert.DeserializeObject<Extract>(jsonString);
