@@ -49,10 +49,10 @@ namespace Aylien.TextApi
         /// <param name="html">HTML as string</param>
         /// <param name="bestImage">Whether extract the best image of the article</param>
         /// <returns>A <see cref="Extract"/></returns>
-        public Extract Extract(string url = null, string html = null, bool bestImage = false)
+        public Extract Extract(string url = null, string html = null, bool bestImage = false, Dictionary<string, string> extraParameters = null)
         {
             Extract extract = new Aylien.TextApi.Extract(configuration);
-            Response r = extract.call(url, html, bestImage.ToString());
+            Response r = extract.call(url, html, bestImage.ToString(), extraParameters);
             extractRateLimitParameters(r);
             return extract;
         }
@@ -220,7 +220,8 @@ namespace Aylien.TextApi
             }
         }
 
-        private void extractRateLimitParameters(Response r){
+        private void extractRateLimitParameters(Response r)
+        {
             RateLimit = new Dictionary<string, int>
             {
                 {"Limit", int.Parse(r.ResponseHeader["X-RateLimit-Limit"])},
