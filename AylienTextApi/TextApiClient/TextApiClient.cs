@@ -53,7 +53,7 @@ namespace Aylien.TextApi
         {
             Extract extract = new Aylien.TextApi.Extract(configuration);
             Response r = extract.call(url, html, bestImage.ToString());
-            extractRateLimitParameteres(r);
+            extractRateLimitParameters(r);
             return extract;
         }
 
@@ -78,7 +78,7 @@ namespace Aylien.TextApi
         {
             Summarize summarize = new Aylien.TextApi.Summarize(configuration);
             Response r = summarize.call(text, title, url, mode, sentencesNumber.ToString(), sentencesPercentage.ToString());
-            extractRateLimitParameteres(r);
+            extractRateLimitParameters(r);
             return summarize;
         }
 
@@ -95,7 +95,7 @@ namespace Aylien.TextApi
         {
             Classify classify = new Aylien.TextApi.Classify(configuration);
             Response r = classify.call(url, text, language);
-            extractRateLimitParameteres(r);
+            extractRateLimitParameters(r);
             return classify;
         }
 
@@ -113,7 +113,7 @@ namespace Aylien.TextApi
         {
             Sentiment sentiment = new Aylien.TextApi.Sentiment(configuration);
             Response r = sentiment.call(url, text, mode);
-            extractRateLimitParameteres(r);
+            extractRateLimitParameters(r);
             return sentiment;
         }
 
@@ -129,7 +129,7 @@ namespace Aylien.TextApi
         {
             Entities entities = new Aylien.TextApi.Entities(configuration);
             Response r = entities.call(url, text);
-            extractRateLimitParameteres(r);
+            extractRateLimitParameters(r);
             return entities;
         }
 
@@ -148,7 +148,7 @@ namespace Aylien.TextApi
         {
             Concepts concepts = new Aylien.TextApi.Concepts(configuration);
             Response r = concepts.call(url, text, language);
-            extractRateLimitParameteres(r);
+            extractRateLimitParameters(r);
             return concepts;
         }
 
@@ -165,7 +165,7 @@ namespace Aylien.TextApi
         {
             Hashtags hashtags = new Aylien.TextApi.Hashtags(configuration);
             Response r = hashtags.call(url, text, language);
-            extractRateLimitParameteres(r);
+            extractRateLimitParameters(r);
             return hashtags;
         }
 
@@ -180,7 +180,7 @@ namespace Aylien.TextApi
         {
             Language language = new Aylien.TextApi.Language(configuration);
             Response r = language.call(url, text);
-            extractRateLimitParameteres(r);
+            extractRateLimitParameters(r);
             return language;
         }
 
@@ -195,14 +195,14 @@ namespace Aylien.TextApi
         {
             Related related = new Aylien.TextApi.Related(configuration);
             Response r = related.call(phrase, count.ToString());
-            extractRateLimitParameteres(r);
+            extractRateLimitParameters(r);
             return related;
         }
 
         /// <summary>
         /// Returns Rate Limit of API calls.
         /// </summary>
-        /// <returns> Retrun a Dictionary<string, int> of rate limit</returns>
+        /// <returns> Return a Dictionary<string, int> of rate limit</returns>
         public Dictionary<string, int> RateLimit
         {
             get
@@ -210,7 +210,7 @@ namespace Aylien.TextApi
                 if (rateLimit["Limit"] == -1 && rateLimit["Remaining"] == -1 && rateLimit["Reset"] == -1)
                 {
                     Response r = new Aylien.TextApi.Language(configuration).call(null, "Test");
-                    extractRateLimitParameteres(r);
+                    extractRateLimitParameters(r);
                 }
                 return rateLimit;
             }
@@ -220,7 +220,7 @@ namespace Aylien.TextApi
             }
         }
 
-        private void extractRateLimitParameteres(Response r){
+        private void extractRateLimitParameters(Response r){
             RateLimit = new Dictionary<string, int>
             {
                 {"Limit", int.Parse(r.ResponseHeader["X-RateLimit-Limit"])},
