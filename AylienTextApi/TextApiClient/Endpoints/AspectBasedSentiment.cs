@@ -24,6 +24,11 @@ namespace Aylien.TextApi
 {
     public class AspectBasedSentiment : Base
     {
+        /// <summary>
+        /// Default constructor added to provide better serialization support.
+        /// </summary>
+        public AspectBasedSentiment() : base() { }
+
         public AspectBasedSentiment(Configuration config) : base(config) { }
 
         internal Response call(string domain, string url, string text)

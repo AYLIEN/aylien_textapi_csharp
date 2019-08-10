@@ -39,7 +39,7 @@ namespace Aylien.TextApi
         ///// <summary>
         ///// The HTTP response Message returned by Aylien Text API
         ///// </summary>
-        public string Message { get; private set; }
+        public new string Message { get; private set; }
 
         /// <summary>
         /// 

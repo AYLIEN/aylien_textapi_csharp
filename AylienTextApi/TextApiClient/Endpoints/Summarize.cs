@@ -24,6 +24,11 @@ namespace Aylien.TextApi
 {
     public class Summarize : Base
     {
+        /// <summary>
+        /// Default constructor added to provide better serialization support.
+        /// </summary>
+        public Summarize() { }
+
         public Summarize(Configuration config) : base(config) { }
 
         internal Response call(string text, string title, string url, string mode, string sentencesNumber, string sentencesPercentage)
@@ -58,7 +63,7 @@ namespace Aylien.TextApi
         public string[] Sentences { get; set; }
         public string Text { get; set; }
 
-        private void populateData(string jsonString)
+        void populateData(string jsonString)
         {
             Summarize m = JsonConvert.DeserializeObject<Summarize>(jsonString);
 

@@ -44,8 +44,8 @@ namespace Aylien.TextApi
             {
                 var response = (HttpWebResponse)Request.GetResponse();
                 var responseString = new StreamReader(response.GetResponseStream()).ReadToEnd();
-                response.Close();
                 Response returnResponse = new Response(responseString, response.Headers);
+                response.Close();
 
                 return returnResponse;
             }
@@ -57,28 +57,28 @@ namespace Aylien.TextApi
 
         private void compileRequestParams(Configuration configuration)
         {
-            HttpWebRequest request;
+            HttpWebRequest _request;
 
             if (configuration.Method == "POST")
             {
-                request = (HttpWebRequest)WebRequest.Create(RequestUri);
-                request.Method = configuration.Method;
+                _request = (HttpWebRequest)WebRequest.Create(RequestUri);
+                _request.Method = configuration.Method;
 
-                request.Headers.Add(Configuration.Headers["AppKey"], configuration.AppKey);
-                request.Headers.Add(Configuration.Headers["AppId"], configuration.AppId);
-                request.UserAgent = configuration.UserAgent;
+                _request.Headers.Add(Configuration.Headers["AppKey"], configuration.AppKey);
+                _request.Headers.Add(Configuration.Headers["AppId"], configuration.AppId);
+                _request.UserAgent = configuration.UserAgent;
 
                 var postData = Parameters.Aggregate("",
                   (memo, pair) =>
-                     "&" + pair.First().Key + "=" + Uri.EscapeDataString(pair.First().Value) + memo
+                     "&" + pair.First().Key + "=" + EscapeDataString(pair.First().Value) + memo
                   ).Substring(1);
 
                 var data = Encoding.UTF8.GetBytes(postData);
 
-                request.ContentType = "application/x-www-form-urlencoded";
-                request.ContentLength = data.Length;
+                _request.ContentType = "application/x-www-form-urlencoded";
+                _request.ContentLength = data.Length;
 
-                using (var stream = request.GetRequestStream())
+                using (var stream = _request.GetRequestStream())
                 {
                     stream.Write(data, 0, data.Length);
                     stream.Close();
@@ -88,28 +88,55 @@ namespace Aylien.TextApi
             {
                 var query = Parameters.Aggregate("",
                   (memo, pair) =>
-                     "&" + pair.First().Key + "=" + Uri.EscapeDataString(pair.First().Value) + memo
+                     "&" + pair.First().Key + "=" + EscapeDataString(pair.First().Value) + memo
                      );
 
                 if (query != null && query.Length > 2)
                     query = query.Substring(1);
 
                 if (Parameters.Count > 0)
-                    request = (HttpWebRequest)WebRequest.Create(RequestUri + "?" + query);
+                    _request = (HttpWebRequest)WebRequest.Create(RequestUri + "?" + query);
                 else
-                    request = (HttpWebRequest)WebRequest.Create(RequestUri);
-                request.Method = configuration.Method;
+                    _request = (HttpWebRequest)WebRequest.Create(RequestUri);
+                _request.Method = configuration.Method;
 
-                request.Headers.Add(Configuration.Headers["AppKey"], configuration.AppKey);
-                request.Headers.Add(Configuration.Headers["AppId"], configuration.AppId);
-                request.UserAgent = configuration.UserAgent;
+                _request.Headers.Add(Configuration.Headers["AppKey"], configuration.AppKey);
+                _request.Headers.Add(Configuration.Headers["AppId"], configuration.AppId);
+                _request.UserAgent = configuration.UserAgent;
             }
             else
             {
                 throw new ArgumentException("Method should be GET or POST.");
             }
 
-            Request = request;
+            Request = _request;
+        }
+
+        /// <summary>
+        /// Improved EscapeDataString to replace Url.EscapeDataString, which has a 64K string limitation.
+        /// </summary>
+        /// <param name="stringToEscape"></param>
+        /// <returns></returns>
+        private string EscapeDataString(string stringToEscape) {
+            const int chunkSize = 32766;                // Ensure that this will work on any .Net platform, incl Store / portable
+            var originalSize = stringToEscape.Length;   // Save the original size to make it easier to allocate the StringBuilder at 10% larger to account for encoding.
+            var loops = originalSize / chunkSize;       // Number of chunkSize sized loops.
+
+            // Allocate the StringBuilder with some 'air' for encoded characters.
+            StringBuilder sb = new StringBuilder(originalSize + originalSize / 10);
+
+            // Iterate the string by chunkSize, and call the native .Net API for each safe-sized chunk.
+            for (int loop = 0; loop <= loops; loop++) {
+                if (loop < loops) {
+                    sb.Append(Uri.EscapeDataString(stringToEscape.Substring(chunkSize * loop, chunkSize)));
+                }
+                else {
+                    sb.Append(Uri.EscapeDataString(stringToEscape.Substring(chunkSize * loop)));
+                }
+            }
+
+            // Return the chunked and escaped string.
+            return sb.ToString();
         }
     }
 

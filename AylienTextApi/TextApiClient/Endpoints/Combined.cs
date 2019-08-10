@@ -24,7 +24,17 @@ namespace Aylien.TextApi
 {
     public class Combined : Base
     {
+        /// <summary>
+        /// Default constructor added to provide better serialization support.
+        /// </summary>
+        public Combined() { }
+
         public Combined(Configuration config) : base(config) { }
+
+        public Combined(string serializedData)
+        {
+            populateData(serializedData);
+        }
 
         internal Response call(string url, string text, string[] endpoints)
         {
@@ -43,15 +53,18 @@ namespace Aylien.TextApi
 
             Connection connection = new Connection(Configuration.Endpoints["Combined"], parameters, configuration);
             var response = connection.request();
-            populateData(response.ResponseResult);
+            rawResponse = response.ResponseResult;
+            populateData(rawResponse);
 
             return response;
         }
 
+        string rawResponse;
         public CombinedResult[] Results { get; set; }
         public string Text { get; set; }
 
         public Classify Classify { get; set; }
+        public ClassifyByTaxonomy ClassifyByTaxonomy { get; set; }
         public Concepts Concepts { get; set; }
         public Entities Entities { get; set; }
         public Extract Extract { get; set; }
@@ -60,7 +73,9 @@ namespace Aylien.TextApi
         public Sentiment Sentiment { get; set; }
         public Summarize Summarize { get; set; }
 
-        private void populateData(string jsonString)
+        public string GetRawResponse() => rawResponse;
+
+        void populateData(string jsonString)
         {
             Combined m = JsonConvert.DeserializeObject<Combined>(jsonString);
 
@@ -71,33 +86,46 @@ namespace Aylien.TextApi
             {
                 switch (item.Endpoint)
                 {
+                    case "classify/iab-qag":
+                    case "iptc-subjectcode":
+                        ClassifyByTaxonomy = JsonConvert.DeserializeObject<ClassifyByTaxonomy>(item.Result.ToString());
+                        ClassifyByTaxonomy.Text = Text;
+                        break;
+
                     case "classify":
                         Classify = JsonConvert.DeserializeObject<Classify>(item.Result.ToString());
                         Classify.Text = Text;
                         break;
+
                     case "concepts":
                         Concepts = JsonConvert.DeserializeObject<Concepts>(item.Result.ToString());
                         Concepts.Text = Text;
                         break;
+
                     case "entities":
                         Entities = JsonConvert.DeserializeObject<Entities>(item.Result.ToString());
                         Entities.Text = Text;
                         break;
+
                     case "extract":
                         Extract = JsonConvert.DeserializeObject<Extract>(item.Result.ToString());
                         break;
+
                     case "hashtags":
                         Hashtags = JsonConvert.DeserializeObject<Hashtags>(item.Result.ToString());
                         Hashtags.Text = Text;
                         break;
+
                     case "language":
                         Language = JsonConvert.DeserializeObject<Language>(item.Result.ToString());
                         Language.Text = Text;
                         break;
+
                     case "sentiment":
                         Sentiment = JsonConvert.DeserializeObject<Sentiment>(item.Result.ToString());
                         Sentiment.Text = Text;
                         break;
+
                     case "summarize":
                         Summarize = JsonConvert.DeserializeObject<Summarize>(item.Result.ToString());
                         Summarize.Text = Text;

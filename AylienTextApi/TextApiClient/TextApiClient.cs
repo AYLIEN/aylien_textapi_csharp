@@ -25,7 +25,7 @@ namespace Aylien.TextApi
     /// </summary>
     public class Client
     {
-        private Configuration configuration;
+        private readonly Configuration configuration;
         private Dictionary<string, int> rateLimit = new Dictionary<string, int>
         {
             {"Limit", -1}, {"Remaining", -1}, {"Reset", -1}
@@ -43,7 +43,7 @@ namespace Aylien.TextApi
 
         /// <summary>
         /// Extracts the main body of article, including embedded media such as
-        /// images & videos from a URL and removes all the surrounding clutter.
+        /// images &amp; videos from a URL and removes all the surrounding clutter.
         /// </summary>
         /// <param name="url">A valid URL</param>
         /// <param name="html">HTML as string</param>
@@ -263,7 +263,7 @@ namespace Aylien.TextApi
         /// <summary>
         /// Returns Rate Limit of API calls.
         /// </summary>
-        /// <returns> Return a Dictionary<string, int> of rate limit</returns>
+        /// <returns> Return a Dictionary&lt;string, int&gt; of rate limit</returns>
         public Dictionary<string, int> RateLimit
         {
             get
@@ -284,10 +284,22 @@ namespace Aylien.TextApi
         private void extractRateLimitParameters(Response r){
             RateLimit = new Dictionary<string, int>
             {
-                {"Limit", int.Parse(r.ResponseHeader["X-RateLimit-Limit"])},
-                {"Remaining", int.Parse(r.ResponseHeader["X-RateLimit-Remaining"])},
-                {"Reset", int.Parse(r.ResponseHeader["X-RateLimit-Reset"])}
+                {"Limit", SafeParse(r.ResponseHeader["X-RateLimit-Limit"], -1)},
+                {"Remaining", SafeParse(r.ResponseHeader["X-RateLimit-Remaining"], -1)},
+                {"Reset", SafeParse(r.ResponseHeader["X-RateLimit-Reset"], -1)}
             };
+        }
+
+        /// <summary>
+        /// Added this method because extractRateLimitParameters throws null exceptions 
+        /// when the API response does not include X-RateLimit headers.
+        /// </summary>
+        /// <param name="value"></param>
+        /// <param name="defaultValue"></param>
+        /// <returns></returns>
+        private int SafeParse(string value, int defaultValue) {
+            int.TryParse(value, out defaultValue);
+            return defaultValue;
         }
     }
 }

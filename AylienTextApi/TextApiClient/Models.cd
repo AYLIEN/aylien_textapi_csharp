@@ -1,0 +1,45 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1" MembersFormat="FullSignature">
+  <Class Name="Aylien.TextApi.Entity">
+    <Position X="1.25" Y="0.75" Width="2.75" />
+    <TypeIdentifier>
+      <HashCode>AIAQAAAAACAAAAAAAAIAAAAAAAgAAQABCAAAIAAAIQA=</HashCode>
+      <FileName>TextApiClient\Endpoints\Entities.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Aylien.TextApi.Concept">
+    <Position X="4.5" Y="0.75" Width="3.25" />
+    <TypeIdentifier>
+      <HashCode>AgAAAAAAAAAAAAAEAAIAAAAAAAAAAAgAAAAAAAAAAAA=</HashCode>
+      <FileName>TextApiClient\Endpoints\Concepts.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsCollectionAssociation>
+      <Property Name="SurfaceForms" />
+    </ShowAsCollectionAssociation>
+  </Class>
+  <Class Name="Aylien.TextApi.SurfaceForm">
+    <Position X="4.5" Y="3.5" Width="3.25" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAgEQAAAAAAAAAAAAAAAAAAAAAAAgAA=</HashCode>
+      <FileName>TextApiClient\Endpoints\Concepts.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Aylien.TextApi.TaxonomicClassification">
+    <Position X="1.25" Y="6" Width="2.75" />
+    <TypeIdentifier>
+      <HashCode>AAACAAAAEAAAAAgEAAAAAAAAAAAAAAAACAAAAEAAAAA=</HashCode>
+      <FileName>TextApiClient\Endpoints\ClassifyByTaxonomy.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsCollectionAssociation>
+      <Property Name="Links" />
+    </ShowAsCollectionAssociation>
+  </Class>
+  <Class Name="Aylien.TextApi.Link">
+    <Position X="5" Y="6" Width="2.25" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAgAEAAAAAAAAAAAAAAAACAAAAAAAAAA=</HashCode>
+      <FileName>TextApiClient\Endpoints\ClassifyByTaxonomy.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Font Name="Segoe UI" Size="9" />
+</ClassDiagram>

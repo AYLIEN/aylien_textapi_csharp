@@ -45,9 +45,9 @@ namespace Aylien.TextApi
             {"AppId", "X-AYLIEN-TextAPI-Application-ID"}
         };
 
-        private string defaultBaseUri = "https://api.aylien.com/api/v1/";
-        private string defaultMethod = "POST";
-        private string defaultUserAgent = "Aylien Text API C# Lib 1.12.0.0";
+        private readonly string defaultBaseUri = "https://api.aylien.com/api/v1/";
+        private readonly string defaultMethod = "POST";
+        private readonly string defaultUserAgent = "Aylien Text API C# Lib 1.12.0.0";
 
         public Configuration(string appId, string appKey)
         {

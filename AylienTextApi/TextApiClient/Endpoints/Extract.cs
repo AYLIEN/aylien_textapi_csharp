@@ -25,6 +25,11 @@ namespace Aylien.TextApi
 {
     public class Extract : Base
     {
+        /// <summary>
+        /// Default constructor added to provide better serialization support.
+        /// </summary>
+        public Extract() { }
+
         public Extract(Configuration config) : base(config) { }
 
         internal Response call(string url, string html, string bestImage, string keepHtmlFormatting)
@@ -54,11 +59,11 @@ namespace Aylien.TextApi
         public string Article { get; set;}
         public string Image { get; set;}
         public string Author { get; set;}
-        public Nullable<DateTime> PublishDate { get; set; }
+        public DateTime? PublishDate { get; set; }
         public string[] Videos { get; set;}
         public string[] Feeds { get; set;}
-        
-        private void populateData(string jsonString)
+
+        void populateData(string jsonString)
         {
             Extract m = JsonConvert.DeserializeObject<Extract>(jsonString,
                 new IsoDateTimeConverter { DateTimeFormat = "yyyy-MM-ddTHH:mm:ssZ" });

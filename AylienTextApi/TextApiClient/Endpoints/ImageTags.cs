@@ -24,6 +24,11 @@ namespace Aylien.TextApi
 {
     public class ImageTags : Base
     {
+        /// <summary>
+        /// Default constructor added to provide better serialization support.
+        /// </summary>
+        public ImageTags() : base() { }
+
         public ImageTags(Configuration config) : base(config) { }
 
         internal Response call(string url)

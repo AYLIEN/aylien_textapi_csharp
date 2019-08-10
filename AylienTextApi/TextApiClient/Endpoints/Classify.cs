@@ -24,6 +24,11 @@ namespace Aylien.TextApi
 {
     public class Classify : Base
     {
+        /// <summary>
+        /// Default constructor added to provide better serialization support.
+        /// </summary>
+        public Classify() { }
+
         public Classify(Configuration config) : base(config) { }
 
         internal Response call(string url, string text, string language)

@@ -24,6 +24,11 @@ namespace Aylien.TextApi
 {
     public class Hashtags : Base
     {
+        /// <summary>
+        /// Default constructor added to provide better serialization support.
+        /// </summary>
+        public Hashtags() : base() { }
+
         public Hashtags(Configuration config) : base(config) { }
 
         internal Response call(string url, string text, string language)
